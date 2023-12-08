@@ -1,0 +1,42 @@
+{
+  "name": "swagger-to-jsonschema",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "generate-json-schema": "node bin/script.js --script generate-json-schema"
+  },
+  "files": [
+    "bin"
+  ],
+  "bin": {
+    "setaria": "bin/script.js"
+  },
+  "devDependencies": {
+    "axios": "^1.6.2",
+    "chalk": "^2.4.2",
+    "https": "^1.0.0",
+    "json-schema-to-typescript": "^13.1.1",
+    "lodash": "^4.17.21",
+    "minimist": "^1.2.0",
+    "mkdirp": "^0.5.1",
+    "path": "^0.12.7",
+    "prettier": "^3.1.0",
+    "rimraf": "^2.6.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tenbamboo/swagger-to-jsonschema"
+  },
+  "keywords": [
+    "swagger",
+    "jonschema",
+    "typescript",
+    "interface"
+  ],
+  "author": "haze liu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tenbamboo/swagger-to-jsonschema/issues"
+  },
+  "homepage": "https://github.com/tenbamboo/swagger-to-jsonschema#readme"
+}
