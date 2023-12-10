@@ -9,6 +9,7 @@ const mkdirp = require('mkdirp')
 const rimraf = require('rimraf')
 const exec = require('../exec-util')
 const log = require('../log-util')
+const json2ts = require('json-schema-to-typescript')
 
 // 排除数组
 const EXCLUDE_KEY_CHAR = ['«', '»']
@@ -205,17 +206,17 @@ async function getJsonSchemaBySwagger(swaggerUrls, config) {
 }
 
 function getInput(config) {
-  if (config && config.jsonSchema && config.jsonSchema.input) {
+  if (config && config.jsonSchema && config.jsonSchema.schemaInput) {
     const result = {}
-    const { input } = config.jsonSchema
-    const { swaggerUrls } = input
+    const { schemaInput } = config.jsonSchema
+    const { swaggerUrls } = schemaInput
     // 处理Swagger格式数据(Open API)
     if (swaggerUrls) {
       return getJsonSchemaBySwagger(swaggerUrls, config.jsonSchema)
     }
     return result
   }
-  log.error('没有找到数据源。请确认格式是否正确{ jsonSchema: { input: { swaggerUrls: [Object] } } }')
+  log.error('没有找到数据源。请确认格式是否正确{ jsonSchema: { schemaInput: { swaggerUrls: [Object] } } }')
 }
 
 module.exports = class GenerateJsonSchema {
@@ -226,7 +227,7 @@ module.exports = class GenerateJsonSchema {
   }
 
   getOutputPath() {
-    return _.get(this.config, ['jsonSchema', 'output'])
+    return _.get(this.config, ['jsonSchema', 'schemaOutput'])
   }
 
   clear() {
@@ -235,6 +236,15 @@ module.exports = class GenerateJsonSchema {
     if (fs.existsSync(outputPath)) {
       // 移除目录
       rimraf.sync(outputPath)
+    }
+
+    if (_.get(this.config, 'jsonSchema.setting.isGenerateInterfaceByTypescript', false)) {
+      const filePath = _.get(this.config, ['jsonSchema', 'interfaceOutput'])
+      // 目录存在的场合
+      if (fs.existsSync(filePath)) {
+        // 移除目录
+        rimraf.sync(filePath)
+      }
     }
   }
 
@@ -249,7 +259,10 @@ module.exports = class GenerateJsonSchema {
       const description = jsonSchema[key]
       const fileName = `${_.kebabCase(key)}.json`
       const fullFilePath = join(outputPath, fileName)
-      this.generate(fullFilePath, key, description, jsonSchema[key].properties)
+      this.generate(fullFilePath, key, description)
+
+      // this.generate(fullFilePath, key, description)
+      this.generateInterfaceForTypeScript(description, key)
       this.outputJsonSchemaPaths[key] = fileName
     })
     Object.keys(apiManagement).forEach((key) => {
@@ -266,6 +279,44 @@ module.exports = class GenerateJsonSchema {
       fs.writeFileSync(fullFilePath, JSON.stringify(content), { flag: 'wx' })
       log.info(`JSONSchema文件 ${key} [${join(this.context, fullFilePath)}] 已生成。`)
     }
+  }
+  generateInterfaceForTypeScript(schemaInfo, folderName) {
+    if (_.get(this.config, 'jsonSchema.setting.isGenerateInterfaceByTypescript', false)) {
+      log.label('开始生成d.ts文件：')
+      const filePath = _.get(this.config, ['jsonSchema', 'interfaceOutput'])
+      mkdirp.sync(join(filePath, `/${folderName.toLowerCase()}`))
+      Object.keys(schemaInfo).forEach(key => {
+        const fullFilePath = join(filePath, `/${folderName.toLowerCase()}`, `${key}.d.ts`)
+
+
+        const schema = schemaInfo[key]
+        if (schema && schema?.properties) {
+          const componentsSchemas = {}
+          // 把单独的schemaItem拿出来，查找对应属性下有没有$ref的引用，如果有，则放入到components中
+          Object.keys(schema?.properties).forEach(key => {
+            const item = schema.properties[key]
+            if (item["$ref"]) {
+              const spList = item["$ref"].split('/')
+              const componentKey = spList[spList.length - 1]
+              componentsSchemas[componentKey] = schemaInfo[componentKey]
+
+            }
+          })
+          json2ts.compile({
+            ...schema,
+            components: {
+              schemas: componentsSchemas
+            }
+          }, key, { declareExternallyReferenced: true }).then(content => {
+            fs.writeFileSync(fullFilePath, content, { flag: 'wx' })
+          }).catch(() => { })
+        }
+
+      })
+
+
+    }
+
   }
 
   createJsonSchemaIndexContent(outputJsonSchemaPaths) {

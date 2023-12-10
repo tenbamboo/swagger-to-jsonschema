@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "generate-json-schema": "node bin/script.js --script generate-json-schema"
+    "generate-json-schema": "node bin/script.js --script generate-json-schema",
+    "test": "json2ts -i jsonschema/ -o types/"
   },
   "files": [
     "bin"

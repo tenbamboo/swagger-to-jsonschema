@@ -1,43 +1,36 @@
 const config = {
   jsonSchema: {
-    input: {
+    schemaInput: {
       swaggerUrls: {
-        preprocess: {
-          url: 'http://10.239.187.3:30201/preprocess/v3/api-docs',
-          name: '预处理服务'
+        claim: {
+          url: 'http://10.199.134.149:9900/claim/v3/api-docs?group=claim',
+          name: '报账单服务'
         },
-        sys: {
-          url: 'http://10.239.187.3:30101/sys/v3/api-docs',
-          name: '公共服务'
+        // admin: {
+        //   url: 'http://10.199.134.149:9600/v3/api-docs?group=%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E9%85%8D%E7%BD%AE',
+        //   name: '公共服务'
+        // },
+        // image: {
+        //   url: 'http://10.199.134.149:9400/image/v3/api-docs',
+        //   name: '电子影像'
+        // },
+        oper: {
+          url: 'http://10.199.134.149:9300/operating/v3/api-docs?group=OPERATING-DEFAULT',
+          name: '运营服务'
         },
-        summary: {
-          url: 'http://10.239.187.3:30501/summary/v3/api-docs',
-          name: '财务汇总'
-        },
-        fae: {
-          url: 'http://10.239.187.3:30001/fea-fae/v3/api-docs',
-          name: 'Web服务'
-        },
-        report: {
-          url: 'http://10.239.187.3:30601/fea-fae-report/v3/api-docs',
-          name: '报表'
-        },
-        settlement: {
-          url: 'http://10.239.187.3:30701/settlement/v3/api-docs',
-          name: '内部往来'
-        },
-        rule: {
-          url: 'http://10.239.187.3:30301/rules/v3/api-docs',
-          name: '规则管理'
-        }
       }
     },
-    output: './config',
+    // schema文件输出的路径
+    schemaOutput: './jsonschema',
+    // typescript interface输出的路径
+    interfaceOutput: './interface',
     setting: {
       // 将api整理到一起，生成Yapi等工具所用，将同一实例内的api归类到一起，以用于yapi等工具不支持三级目录的情况
-      isOutputApiManagementFile: true,
+      isOutputApiManagementFile: false,
+      // 当后端属性中的title为空时是否处理
       isTitleNullCompletionByPropKey: false,
-      excludeTagList: ['测试API', '测试']
+      // 是否生成typescript中使用的interface信息
+      isGenerateInterfaceByTypescript: true,
     }
   }
 }
