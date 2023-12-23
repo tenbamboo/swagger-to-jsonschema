@@ -15,7 +15,8 @@
     "swagger-to-jsonschema": "lib/script.js"
   },
   "peerDependencies": {
-    "json-schema-to-typescript": "^13.1.1"
+    "json-schema-to-typescript": "^13.1.1",
+    "prettier": "^3.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.4",
