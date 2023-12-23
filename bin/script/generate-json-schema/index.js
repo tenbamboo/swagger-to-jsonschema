@@ -1,15 +1,26 @@
 /* eslint-disable no-undef */
-require('url')
-const axios = require('axios')
-const fs = require('fs')
-const https = require('https')
-const _ = require('lodash')
-const { join } = require('path')
-const mkdirp = require('mkdirp')
-const rimraf = require('rimraf')
-const exec = require('../exec-util')
-const log = require('../log-util')
-const json2ts = require('json-schema-to-typescript')
+import axios from 'axios'
+import fs from 'fs'
+import _ from 'lodash'
+import { join } from 'path'
+import mkdirp from 'mkdirp'
+import rimraf from 'rimraf'
+import exec from '../exec-util.js'
+import log from '../log-util.js'
+import json2ts from 'json-schema-to-typescript'
+
+
+// require('url')
+// const axios = require('axios')
+// const fs = require('fs')
+// const https = require('https')
+// const _ = require('lodash')
+// const { join } = require('path')
+// const mkdirp = require('mkdirp')
+// const rimraf = require('rimraf')
+// const exec = require('../exec-util')
+// const log = require('../log-util')
+// const json2ts = require('json-schema-to-typescript')
 
 // 排除数组
 const EXCLUDE_KEY_CHAR = ['«', '»']
@@ -219,7 +230,7 @@ function getInput(config) {
   log.error('没有找到数据源。请确认格式是否正确{ jsonSchema: { schemaInput: { swaggerUrls: [Object] } } }')
 }
 
-module.exports = class GenerateJsonSchema {
+export default class GenerateJsonSchema {
   constructor(context, { config } = {}) {
     this.context = context
     this.config = config
