@@ -1,9 +1,6 @@
 {
   "name": "swagger-to-jsonschema",
   "version": "0.0.6",
-  "description": "",
-  "module": "es6",
-  "type": "module",
   "scripts": {
     "build": "babel bin -d lib",
     "generate-schema": "node bin/script.js --script generate-json-schema"
@@ -13,7 +10,7 @@
     "lib"
   ],
   "bin": {
-    "swagger-to-jsonschema": "bin/script.js"
+    "swagger-to-jsonschema": "lib/script.js"
   },
   "peerDependencies": {
     "json-schema-to-typescript": "^13.1.1",
