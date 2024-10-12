@@ -1,6 +1,6 @@
 {
   "name": "swagger-to-jsonschema",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "scripts": {
     "build": "babel bin -d lib",
     "generate-schema": "node bin/script.js --script generate-json-schema"
