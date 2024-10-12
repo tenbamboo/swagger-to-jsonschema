@@ -6,10 +6,11 @@
   "type": "module",
   "scripts": {
     "build": "babel bin -d lib",
-    "generate-json-schema": "node bin/script.js --script generate-json-schema"
+    "generate-schema": "node bin/script.js --script generate-json-schema"
   },
   "files": [
-    "bin"
+    "bin",
+    "lib"
   ],
   "bin": {
     "swagger-to-jsonschema": "lib/script.js"
