@@ -13,7 +13,7 @@
     "lib"
   ],
   "bin": {
-    "swagger-to-jsonschema": "lib/script.js"
+    "swagger-to-jsonschema": "bin/script.js"
   },
   "peerDependencies": {
     "json-schema-to-typescript": "^13.1.1",
